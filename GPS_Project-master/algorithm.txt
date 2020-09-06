@@ -1,0 +1,231 @@
+Ammon Law
+Final Project
+12/2/18
+Mapping with the Shortest Path
+
+Node.h
+This class will contain the data for each node and each node represents an intersection
+
+I’ll check if the header already exists
+I’ll define that the header exists
+I’ll have a class header for LinkedNode so I can use it without calling the header file yet
+In private
+	I’ll declare an int called NID to take in the ID of the node
+	I’ll declare doubles called Xcoord, Ycoord, and short_cost for the X and Y coordinate and the current distance travelled required to get to this node
+	I’ll have a vector for node pointers called neighbors that will take the neighbors to this node from the linked list
+	I’ll have a vector for doubles called costs that will take the cost to get to each neighbor of this node from the linked list
+	I’ll have a Node pointer called prev_node for knowing which neighbor we came from
+	I’ll have a LinkedNode pointer called lneighbors that will contain a linked list of neighbor nodes as well as the cost required to get to them
+
+In the public
+	I’ll have a constructor called Node()
+	I’ll have a deconstructor called ~Node()
+	I’ll have a method that is of bool type that overloads the < operator to include Nodes
+	I’ll have a void method called setStats that will take in a line from the main and split it up to make the NID, Xcoord, and Ycoord of the Node
+	I’ll have a void method called makeNeighbors that will put the Node and double taken in from the main and will put them into the linked list lneighbors
+	I’ll have a void method called setPrev that will take a Node and will put it into prev_node so we know where this node came from
+	I’ll have a double method getShortCost that will send the short_cost of the Node to the main
+	I’ll have a vector <double> pointer method called getCosts that will take the costs from the linked list, put it into costs, and then send costs to the main
+	I’ll have a vector <Node pointer> pointer method called getNeighbors that will take the neighbors from the linked list, put it into neighbors, and then send neighbors to the main
+	I’ll have a void method called setShortCost that will take in a double and set short_cost equal to the double
+
+
+Node.cpp
+In the constructor
+	I’ll set short_cost equal to 999999999999 so that the queue will ignore nodes that haven’t been visited yet
+	I’ll set lneighbors equal to 0 so that it is NULL until I fill it with nodes
+
+In the deconstructor
+	Delete lneighbors
+
+In setStats(line)
+	I’ll make strings NID, Xcoord, and Ycoord
+	I’ll make stringstreams data and converter
+	I’ll use data.clear to clear data
+	I’ll use data<<line to put line into data
+	I’ll then use getline to take the NID out of the line and put it into the string NID
+	I’ll then clear converter
+	I’ll then put NID into the converter 
+	I’ll then put converter into the classes NID as converter should automatically convert it
+	I’ll use data.clear to clear data
+	I’ll use data<<line to put line into data
+	I’ll then use getline to take the Xcoord out of the line and put it into the string Xcoord
+	I’ll then clear converter
+	I’ll then put Xcoord into the converter 
+	I’ll then put converter into the classes Xcoord as converter should automatically convert it
+	I’ll use data.clear to clear data
+	I’ll use data<<line to put line into data
+	I’ll then use getline to take the Ycoord out of the line and put it into the string Xcoord
+	I’ll then clear converter
+	I’ll then put Ycoord into the converter 
+	I’ll then put converter into the classes Ycoord as converter should automatically convert it
+	
+For the method makeNeighbors(Node* node, double cost)
+	I’ll put each node and cost put into the LinkedNode lneighbors for this class using addNode
+	
+For the method bool Node::operator <(const Node& rhs)
+	I’ll return the Node’s short_cost compared to another another short_cost
+
+For the method setPrev(Node* node)
+	I’ll set prev_node equal to node
+
+For the method getNeighbors()
+	I’ll set neighbors equal to the LinkedNode method getNeighbors for lneighbors
+	I’ll then return neighbors
+
+For the method getCosts()
+	I’ll set costs equal to the LinkedNode method getCosts for lneighbors
+	I’ll then return costs
+For the method setShortCost(double cost)
+	I’ll set short_cost equal to cost
+
+
+LinkedNode.h
+I’ll make the class header for Node so that I can use it without immediately calling it
+
+In the private
+	I’ll make a struct and call it Edge
+		Inside it I’ll have a Node pointer called data for the current neighbor Node in this struct
+		A double called cost for the cost to get to the node
+		And a pointer to the struct itself called next to show what struct comes after it
+	I’ll have an Edge pointer called helm to check if the next Edge is empty
+	I’ll have an Edge pointer called curr to check every edge’s next to see if that is empty
+	I’ll have an int called size that will keep track of the size of the linked list
+
+In the public
+	I’ll call the constructor LinkedNode()
+	I’ll call the deconstructor ~LinkedNode()
+	I’ll call the vector<Node pointer> method getNeighbors() that will put the Nodes in the linked list into a vector and send that to the Node
+	I’ll call the Vector<double> method getCosts() that will put the costs in the linked list into a vector and send that to the Node
+	I’ll call an int method called getSize() that will send the size of the linked list back to the Node
+	I’ll call a void method called addNode that will take a node and a double and put them into an edge at the back of the linked list
+
+
+LinkedNode.cpp
+
+In the constructor
+	I’ll set helm and curr both equal to 0 to show that they are NULL
+
+In addNode(Node pointer node, double newcost)
+	I’ll make an Edge pointer called edge and I’ll put it on the heap
+	I’ll put the node received into data
+	I’ll put the newcost received into cost
+	I’ll make it’s next = 0
+	
+	If helm is not 0
+		I’ll make size equal 1
+		Curr will equal helm
+		While next of curr isn’t 0
+			Size increases by 1
+			And curr will be the next of curr
+		At the end increase size by 1
+		Make next of curr equal edge
+	
+	Else
+		Make helm equal edge
+		And size equal 1
+	Then delete edge
+
+In method getNeighbors()
+	Make an Edge pointer edge equal helm
+	Make a Node pointer vector neighbors
+	While edge isn’t 0
+		Push edge at the back of neighbors
+		Make edge equal edge’s next
+	Return neighbors to the node
+
+In method getCosts()
+	Make an Edge pointer edge equal helm
+	Make a Node pointer vector costs
+	While edge isn’t 0
+		Push edge at the back of costs
+		Make edge equal edge’s next
+	Return costs to the node
+
+In the method getStats()\
+	I’ll return the size
+
+
+main.cpp
+I’ll include Node.h
+
+	I’ll make an array of nodes, inter, on the heap containing all the nodes of the city
+	I’ll make 2 ifstreams, inNFile and inEFile, to take in the files for node.txt and edge.txt
+	I’ll open both .txt files in the ifstreams
+	I’ll make a string called line
+	
+	I’ll make 2 ints a and b and set them both to 0
+	While a getline of inNFile into line continues
+		I’ll send line into inter[a] using setStats
+		Then I’ll add 1 to a
+	
+I’ll make a string stream called hold and converter
+	I’ll also make strings called buffer, node1_str, node2_str, and cost_str
+	I’ll also make ints called node1, node2, and cost
+	While the getline of inEFile into line continues
+		Hold will take in the line
+		getline will put the first element into buffer since the first element can be ignored
+		the next getline takes in the first node into node1_str
+		then we put that into converter
+		then we put converter into node1
+		then we clear the converter
+
+		the next getline takes in the second node into node2_str
+		then we put that into converter
+		then we put converter into node2
+		then we clear the converter and set it to “”
+		
+		the next getline takes in the cost to each node and puts it into cost_str
+		then we put that into converter
+		then we put converter into cost
+		then we clear the converter and set it to “”
+
+		for inter[node1] we use makeNeighbors to send inter+node2’s node and the cost to that node into the Linked list for this node
+		for inter[node2] we use makeNeighbors to send inter+node1’s node and the cost to that node into the Linked list for this node
+
+		then we clear hold and set it to “”
+	
+	then we close the ifstreams
+	
+	we make a priority_queue of Node pointer, vector of Node pointer, and greater of Node pointer
+	declare ints start, end, and size
+	declare doubles tempcost, nextcost, and neighborcost
+	declare Node pointer temp
+	vector of Node pointers pointers called neighbors
+	vector of costs pointers called costs
+	
+I’ll print a line asking for them to pick a number between 0 and 18000 to pick start
+	Take that number into start
+	I’ll print a line asking for them to pick a number between 0 and 18000 to pick end
+	Take that number into end
+
+	we’ll set the use the setShortCost method for the starting node and send 0
+	then we’ll push that starting node into the queue
+	while the temp doesn’t equal the end node
+		temp equals the lowest node in the queue
+		we then pop that node out of the queue
+		we then use getNeighbors on the temp to get a vector of neighbors into neighbors
+		we then use getCosts on the temp to get a vector of costs into costs
+		we then make size equal neighbors size
+		for an amount of time equal to the size of the vectors
+			we use getShortCost to get the short cost of temp and put it into tempcost
+			we make next cost equal a double dereferenced(ddr) costs at t, the cost to the next neighbor
+			we then use getShortCost on a double dereferenced neighbors at t and put it into neighborcost for how much is in the neighbor
+			if tempcost + nextcost is less then neighborcost
+				we use setShortCost on the ddr neighbors at t to change the cost to get to this node to tempcost + nextcost
+				then we push this onto the queue
+				then we use setPrev on the ddr neighbors at t to make temp it’s previous node	
+
+	I’ll print out saying the shortest path using inter[end].getShortCost()
+	I’ll make a Node pointer prev for previous nodes
+	Then I’ll print out the previous node’s id using inter[end].getPrevId()
+	I’ll set prev equal to inter[end].getPrev()
+	While the prev id isn’t the start id
+		I’ll print out the prev node id by doing prev->getPrevId()
+		I’ll then set prev equal to prev->getPrev()
+	I’ll then print out prev->getPrevId() which is the start
+
+now we delete the inter array
+
+		
+
